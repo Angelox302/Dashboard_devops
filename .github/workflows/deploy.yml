@@ -40,6 +40,17 @@ jobs:
       - name: 1. Descargar codigo del repositorio
         uses: actions/checkout@v4
 
+      - name: Validar credenciales FTP
+        shell: bash
+        env:
+          FTPHOSTNAME: ${{ secrets.FTPHOSTNAME }}
+          FTPUSERNAME: ${{ secrets.FTPUSERNAME }}
+          FTPPASSWORD: ${{ secrets.FTPPASSWORD }}
+        run: |
+          test -n "$FTPHOSTNAME" || { echo "Falta el secreto FTPHOSTNAME en el environment FTP"; exit 1; }
+          test -n "$FTPUSERNAME" || { echo "Falta el secreto FTPUSERNAME en el environment FTP"; exit 1; }
+          test -n "$FTPPASSWORD" || { echo "Falta el secreto FTPPASSWORD en el environment FTP"; exit 1; }
+
       # ------------------------------------------------------------------------
       # PASO 2: Conectarse y subir los archivos por FTP
       # Usa los secretos protegidos y transfiere tus archivos .html o .php
@@ -48,18 +59,16 @@ jobs:
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           # Servidor FTP (ej: ftpupload.net) configurado en tus Secrets
-          server: ${{ secrets.FTP_SERVER }}
+          server: ${{ secrets.FTPHOSTNAME }}
           
           # Usuario FTP (ej: if0_38123456) configurado en tus Secrets
-          username: ${{ secrets.FTP_USERNAME }}
+          username: ${{ secrets.FTPUSERNAME }}
           
           # Contraseña del hosting configurada en tus Secrets
-          password: ${{ secrets.FTP_PASSWORD }}
+          password: ${{ secrets.FTPPASSWORD }}
           
-          # 📁 CARPETA ORIGEN: La carpeta de tu proyecto donde están tus archivos web.
-          # Si tus archivos están dentro de la carpeta "src", déjalo en "./src/".
-          # Si tus archivos están en la raíz del proyecto, cámbialo a "./".
-          local-dir: ./src/
+          # 📁 CARPETA ORIGEN: Los archivos web están en la raíz del repositorio.
+          local-dir: ./
           
           # 🌐 CARPETA DESTINO: La carpeta pública de tu servidor de hosting.
           # Para InfinityFree y cPanel siempre es "/htdocs/" o "/public_html/".
