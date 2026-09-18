@@ -37,8 +37,7 @@ form.addEventListener("submit", function (event) {
         event.preventDefault();
         alert("La contraseña no cumple con los requisitos.");
     } else {
-        event.preventDefault();
-        alert("Login válido.");
+    window.location.href = "dashboar.php";
     }
 
 });
