@@ -12,16 +12,28 @@ password.addEventListener("input", function () {
 
     const value = password.value;
 
-    length.style.color = value.length > 0 && value.length <= 8 ? "green" : "red";
-    number.style.color = /\d/.test(value) ? "green" : "red";
-    uppercase.style.color = /[A-Z]/.test(value) ? "green" : "red";
-    special.style.color = /[^A-Za-z0-9\s]/.test(value) ? "green" : "red";
-    space.style.color = !/\s/.test(value) && value.length > 0 ? "green" : "red";
+    length.style.color =
+        value.length > 0 && value.length <= 8 ? "green" : "red";
 
+    number.style.color =
+        /\d/.test(value) ? "green" : "red";
+
+    uppercase.style.color =
+        /[A-Z]/.test(value) ? "green" : "red";
+
+    special.style.color =
+        /[^A-Za-z0-9\s]/.test(value) ? "green" : "red";
+
+    space.style.color =
+        !/\s/.test(value) && value.length > 0 ? "green" : "red";
 });
+
 
 // Validar antes de enviar
 form.addEventListener("submit", function (event) {
+
+    // IMPORTANTE: evitar el envío normal del formulario
+    event.preventDefault();
 
     const value = password.value;
 
@@ -34,13 +46,14 @@ form.addEventListener("submit", function (event) {
         !/\s/.test(value);
 
     if (!valid) {
-        event.preventDefault();
         alert("La contraseña no cumple con los requisitos.");
-    } else {
-    window.location.href = "dashboar.php";
+        return;
     }
 
+    // Si todo está correcto
+    window.location.href = "./dashboard.php";
 });
+
 
 // Mostrar / ocultar contraseña
 document.getElementById("togglePassword").addEventListener("click", function () {
